@@ -50,6 +50,11 @@ int main() {
 			}
                 
             case 3: {
+            	printf("Nama Kota yang akan dihapus: ");
+			    fgets(namaKota, MAX_NAME_LENGTH, stdin);
+			    namaKota[strcspn(namaKota, "\n")] = '\0';
+			
+			    deleteKota(&kota, namaKota);
                 
                 break;
             }

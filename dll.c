@@ -52,7 +52,38 @@ void addKota(ListKota *L, const char *namaKota)
 // Modul untuk menghapus node kota
 void deleteKota(ListKota *L, const char *namaKota)
 {
-	
+    addresskt current = L->First;
+    addresskt prev = Nil;
+
+    while (current != Nil) {
+        if (strcmp(current->kt, namaKota) == 0) {
+            if (prev == Nil) {
+                L->First = current->r;
+            } else {
+                prev->r = current->r;
+            }
+            
+            addresswg currentWarga = current->p;
+            while (currentWarga != Nil) {
+                addresswg tempWarga = currentWarga;
+                currentWarga = currentWarga->q;
+                free(tempWarga->nm);
+                free(tempWarga);
+            }
+
+            free(current->kt);
+            free(current);
+
+            L->count--;
+            printf("Kota %s berhasil dihapus\n", namaKota);
+            return;
+        }
+
+        prev = current;
+        current = current->r;
+    }
+
+    printf("Kota %s tidak ditemukan!\n", namaKota);
 }
 
 // Modul untuk menambah node warga
