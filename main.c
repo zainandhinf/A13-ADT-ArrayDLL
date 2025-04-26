@@ -1,18 +1,15 @@
 #include <stdio.h>
-#include "arrdll.h"
+#include "dll.h"
 
 int main() {
 
-    int jumlahKota, choice, idx;
-    char kota[MAX_NAME_LENGTH], warga[MAX_NAME_LENGTH];
-    ArrayKota arr;
-    
-	printf("Masukkan jumlah maksimum kota: ");
-    scanf("%d", &jumlahKota);
-    getchar();
-
-    initArrayKota(&arr, jumlahKota);
-    
+	int choice;
+	ListKota kota;
+    initListKota(&kota);
+    char namaKota[MAX_NAME_LENGTH];
+    char warga[MAX_NAME_LENGTH];
+    addresskt foundCity; 
+				
     do {
         printf("\nMenu:\n");
         printf("1. Tambah Kota\n");
@@ -28,72 +25,55 @@ int main() {
         switch (choice) {
             case 1: {
                 printf("Nama Kota: ");
-                fgets(kota, MAX_NAME_LENGTH, stdin);
-                kota[strcspn(kota, "\n")] = '\0';
-                addKota(&arr, kota);
-                break;
+			    fgets(namaKota, MAX_NAME_LENGTH, stdin);
+			    namaKota[strcspn(namaKota, "\n")] = '\0';
+			    addKota(&kota, namaKota);
+			    break;
             }
                 
             case 2: {
                 printf("Nama Kota: ");
-			    fgets(kota, MAX_NAME_LENGTH, stdin);
-			    kota[strcspn(kota, "\n")] = '\0';
+			    fgets(namaKota, MAX_NAME_LENGTH, stdin);
+			    namaKota[strcspn(namaKota, "\n")] = '\0';
 			
-			    for (idx = 0; idx < arr.count; idx++) {
-			        if (strcmp(arr.data[idx].kt, kota) == 0) {
-			            printf("Nama Warga: ");
-			            fgets(warga, MAX_NAME_LENGTH, stdin);
-			            warga[strcspn(warga, "\n")] = '\0';
-			
-			            addWarga(&arr.data[idx], warga);
-			            break;
-			        }
-			    }
-			
-			    if (idx == arr.count) {
-			        printf("Kota %s tidak ditemukan!\n", kota);
-			    }
+				foundCity = searchKota(&kota, namaKota);
+			    if (foundCity != NULL) {
+                    printf("Nama Warga: ");
+                    fgets(warga, MAX_NAME_LENGTH, stdin);
+                    warga[strcspn(warga, "\n")] = '\0';
+                    addWarga(foundCity, warga);
+                } else {
+                    printf("Kota %s tidak ditemukan!\n", namaKota);
+                }
 			
 			    break;
 			}
                 
             case 3: {
-                printf("Nama Kota yang akan dihapus: ");
-                fgets(kota, MAX_NAME_LENGTH, stdin);
-                kota[strcspn(kota, "\n")] = '\0';
-                if(findKota(&arr, kota)){	
-                	deleteKota(&arr, kota);
-				} else {
-					printf("Kota %s tidak ditemukan!\n", kota);
-				}
+                
                 break;
             }
                 
             case 4: {
                 printf("Nama Kota: ");
-			    fgets(kota, MAX_NAME_LENGTH, stdin);
-			    kota[strcspn(kota, "\n")] = '\0';
+			    fgets(namaKota, MAX_NAME_LENGTH, stdin);
+			    namaKota[strcspn(namaKota, "\n")] = '\0';
 			
-			    for (idx = 0; idx < arr.count; idx++) {
-			        if (strcmp(arr.data[idx].kt, kota) == 0) {
-			            printf("Nama Warga yang akan dihapus: ");
-			            fgets(warga, MAX_NAME_LENGTH, stdin);
-			            warga[strcspn(warga, "\n")] = '\0';
-			
-			            deleteWarga(&arr.data[idx], warga);
-			            break;
-			        }
-			    }
-			
-			    if (idx == arr.count) {
-			        printf("Kota %s tidak ditemukan!\n", kota);
-			    }
+				foundCity = searchKota(&kota, namaKota);
+			    if (foundCity != NULL) {
+                    printf("Nama Warga yang akan dihapus: ");
+                    fgets(warga, MAX_NAME_LENGTH, stdin);
+                    warga[strcspn(warga, "\n")] = '\0';
+                    deleteWarga(foundCity, warga);
+                } else {
+                    printf("Kota %s tidak ditemukan!\n", namaKota);
+                }
 			
 			    break;
 			}
                 
             case 5: {
-                displayAll(arr);
+                displayAll(kota);
                 break;
             }
             

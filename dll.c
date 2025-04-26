@@ -1,73 +1,58 @@
 #include <limits.h>
 #include <malloc.h>
-#include "arrdll.h"
+#include "dll.h"
 
 // Modul
 
 // Modul untuk inisialisai array
-void initArrayKota(ArrayKota *arr, int capacity)
+void initListKota(ListKota *L)
 {
-	int i;
-	
-    arr->data = (Kota*)malloc(capacity * sizeof(Kota));
-    arr->capacity = capacity;
-    arr->count = 0;
-    
-    for (i = 0; i < capacity; i++) {
-        arr->data[i].kt = Nil;
-        arr->data[i].p = Nil;
-    }
+	L->First = Nil;
+    L->count = 0;
 }
 
 // Modul untuk menambah node kota
-void addKota(ArrayKota *arr, const char *namaKota)
+void addKota(ListKota *L, const char *namaKota)
 {
-	int i;
+	addresskt current, last, q;
 	
-	if (arr->count >= arr->capacity) {
-        printf("Array kota penuh!\n");
-        return;
-    }
-    
-    for (i = 0; i < arr->count; i++) {
-        if (arr->data[i].kt && strcmp(arr->data[i].kt, namaKota) == 0) {
+	current = L->First;
+	while (current != Nil) {
+        if (strcmp(current->kt, namaKota) == 0) {
             printf("Kota %s sudah ada!\n", namaKota);
             return;
         }
+        current = current->r;
     }
     
-    arr->data[arr->count].kt = strdup(namaKota);
-    if (!arr->data[arr->count].kt) {
+    q = (addresskt)malloc(sizeof(struct Kota));
+    if (!q) {
         printf("Alokasi memori gagal!\n");
         return;
     }
     
-    arr->data[arr->count].p = Nil;
-    arr->count++;
+    q->kt = strdup(namaKota);
+    q->p = Nil;
+    q->r = Nil;
+    
+	if (L->First == Nil) {
+        L->First = q;
+    } else {
+        last = L->First;
+        while (last->r != Nil) {
+            last = last->r;
+        }
+        last->r = q;
+    }
+    
+    L->count++;
     printf("Kota %s berhasil ditambahkan\n", namaKota);
 }
 
 // Modul untuk menghapus node kota
-void deleteKota(ArrayKota *arr, const char *namaKota)
+void deleteKota(ListKota *L, const char *namaKota)
 {
-	int idx, i;
 	
-	idx = findIndexKota(arr, namaKota);
-    
-    printf("%d", idx);
-    
-    DelAll((List*)&arr->data[idx].p);
-    
-    free(arr->data[idx].kt);
-    
-    for (i = idx; i < arr->count - 1; i++) {
-        arr->data[i] = arr->data[i + 1];
-    }
-    
-    arr->count--;
-    arr->data[arr->count].kt = Nil;
-    arr->data[arr->count].p = Nil;
-    printf("Kota %s berhasil dihapus\n", namaKota);
 }
 
 // Modul untuk menambah node warga
@@ -143,55 +128,65 @@ void deleteWarga(Kota *kota, const char *namaWarga)
 
 
 // Modul untuk mencari kota
-boolean findKota(ArrayKota *arr, const char *namaKota)
+boolean findKota(ListKota *L, const char *namaKota)
 {
-	int i;
-    for (i = 0; i < arr->count; i++) {
-        if (arr->data[i].kt && strcmp(arr->data[i].kt, namaKota) == 0) {
+	addresskt current;
+	
+	current = L->First;
+    while (current != Nil) {
+        if (strcmp(current->kt, namaKota) == 0) {
             return true;
         }
+        current = current->r;
     }
     return false;
 }
 
-// Modul untuk mencari index kota
-int findIndexKota(ArrayKota *arr, const char *namaKota) 
-{
-    int i;
-	for (i = 0; i < arr->count; i++) {
-        if (arr->data[i].kt && strcmp(arr->data[i].kt, namaKota) == 0) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 // Modul untuk menampilkan linked list
-void displayAll(ArrayKota arr) 
+void displayAll(ListKota L)
 {
-    int i;
-    addresswg current;
+    addresskt currentCity = L.First;
     
-    if (arr.count == 0) {
+    if (currentCity == Nil) {
         printf("Daftar Kota Kosong\n");
         return;
     }
     
     printf("\nDaftar Kota dan Warga:\n");
-    for (i = 0; i < arr.count; i++) {
-        printf("%s -> ", arr.data[i].kt);
+    
+    while (currentCity != Nil) {
+        printf("%s -> ", currentCity->kt);
+        addresswg currentResident = currentCity->p;
         
-        current = arr.data[i].p;
-        if (current == Nil) {
-            printf("NIL\n");
+        if (currentResident == Nil) {
+            printf("NIL");
         } else {
-            while (current != Nil) {
-                printf("%s", current->nm);
-                current = current->q;
-                printf(current ? " -> " : " -> NIL\n");
+            while (currentResident != Nil) {
+                printf("%s", currentResident->nm);
+                currentResident = currentResident->q;
+                printf(currentResident ? " -> " : " -> NIL");
             }
         }
+        
+        if (currentCity->r != Nil) {
+            printf("\n    |\n    V\n");
+        }
+        
+        currentCity = currentCity->r;
     }
+    printf("\n");
+}
+
+addresskt searchKota(ListKota *L, const char *namaKota) 
+{
+    addresskt current = L->First;
+    while (current != Nil) {
+        if (strcmp(current->kt, namaKota) == 0) {
+            return current;
+        }
+        current = current->r;
+    }
+    return Nil;
 }
 
 // End Modul

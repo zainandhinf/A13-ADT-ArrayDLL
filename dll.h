@@ -1,5 +1,5 @@
-#ifndef arrdll_H
-#define arrdll_H
+#ifndef dll_H
+#define dll_H
 #include "boolean.h"
 #include "linked.h" 
 #include <stdio.h>
@@ -16,6 +16,7 @@ typedef struct Kota *addresskt;
 typedef struct Kota {
 	 char *kt;
 	 addresswg p;
+	 addresskt r;
 } Kota;
 
 typedef struct Warga {
@@ -24,21 +25,20 @@ typedef struct Warga {
 } Warga;
 
 typedef struct {
-    Kota *data;
+    addresskt First;
     int count;
-    int capacity;
-} ArrayKota;
+} ListKota;
 
 // Modul
 
-// Modul untuk inisialisai array
-void initArrayKota(ArrayKota *arr, int capacity);
+// Modul untuk inisialisai list
+void initListKota(ListKota *L);
 
 // Modul untuk menambah node kota
-void addKota(ArrayKota *arr, const char *namaKota);
+void addKota(ListKota *L, const char *namaKota);
 
 // Modul untuk menghapus node kota
-void deleteKota(ArrayKota *arr, const char *namaKota);
+void deleteKota(ListKota *L, const char *namaKota);
 
 // Modul untuk menambah node warga
 void addWarga(Kota *kota, const char *namaWarga);
@@ -47,13 +47,12 @@ void addWarga(Kota *kota, const char *namaWarga);
 void deleteWarga(Kota *kota, const char *namaWarga);
 
 // Modul untuk mencari kota
-boolean findKota(ArrayKota *arr, const char *namaKota);
-
-// Modul untuk mencari index kota
-int findIndexKota(ArrayKota *arr, const char *namaKota);
+boolean findKota(ListKota *L, const char *namaKota);
 
 // Modul untuk menampilkan linked list
-void displayAll(ArrayKota arr);
+void displayAll(ListKota L);
+
+addresskt searchKota(ListKota *L, const char *namaKota);
 
 // End Modul
 
