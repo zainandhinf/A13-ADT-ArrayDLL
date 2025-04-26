@@ -43,10 +43,10 @@ void deleteKota(ListKota *L, const char *namaKota);
 // Modul untuk menambah node warga
 void addWarga(Kota *kota, const char *namaWarga);
 
-// Modul untuk menambah node warga
+// Modul untuk menghapus node warga
 void deleteWarga(Kota *kota, const char *namaWarga);
 
-// Modul untuk mencari kota
+// Modul untuk menemukan kota dengan output true dan false
 boolean findKota(ListKota *L, const char *namaKota);
 
 // Modul untuk menampilkan linked list

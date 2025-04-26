@@ -52,10 +52,12 @@ void addKota(ListKota *L, const char *namaKota)
 // Modul untuk menghapus node kota
 void deleteKota(ListKota *L, const char *namaKota)
 {
-    addresskt current = L->First;
-    addresskt prev = Nil;
-
-    while (current != Nil) {
+    addresskt current, prev;
+	
+	current = L->First;
+	prev = Nil;
+    
+	while (current != Nil) {
         if (strcmp(current->kt, namaKota) == 0) {
             if (prev == Nil) {
                 L->First = current->r;
@@ -134,14 +136,14 @@ void addWarga(Kota *kota, const char *namaWarga)
 void deleteWarga(Kota *kota, const char *namaWarga)
 {
     addresswg current = kota->p;
-    addresswg sebelum = Nil;
+    addresswg prev = Nil;
 
     while (current != Nil) {
         if (strcmp(current->nm, namaWarga) == 0) {
-            if (sebelum == Nil) {
+            if (prev == Nil) {
                 kota->p = current->q;
             } else {
-                sebelum->q = current->q;
+                prev->q = current->q;
             }
 
             free(current->nm);
@@ -150,7 +152,7 @@ void deleteWarga(Kota *kota, const char *namaWarga)
             return;
         }
 
-        sebelum = current;
+        prev = current;
         current = current->q;
     }
 
@@ -176,34 +178,34 @@ boolean findKota(ListKota *L, const char *namaKota)
 // Modul untuk menampilkan linked list
 void displayAll(ListKota L)
 {
-    addresskt currentCity = L.First;
+    addresskt currentKota = L.First;
     
-    if (currentCity == Nil) {
-        printf("Daftar Kota Kosong\n");
+    if (currentKota == Nil) {
+        printf("List Kota Kosong\n");
         return;
     }
     
     printf("\nDaftar Kota dan Warga:\n");
     
-    while (currentCity != Nil) {
-        printf("%s -> ", currentCity->kt);
-        addresswg currentResident = currentCity->p;
+    while (currentKota != Nil) {
+        printf("%s -> ", currentKota->kt);
+        addresswg currentWarga = currentKota->p;
         
-        if (currentResident == Nil) {
+        if (currentWarga == Nil) {
             printf("NIL");
         } else {
-            while (currentResident != Nil) {
-                printf("%s", currentResident->nm);
-                currentResident = currentResident->q;
-                printf(currentResident ? " -> " : " -> NIL");
+            while (currentWarga != Nil) {
+                printf("%s", currentWarga->nm);
+                currentWarga = currentWarga->q;
+                printf(currentWarga ? " -> " : " -> NIL");
             }
         }
         
-        if (currentCity->r != Nil) {
+        if (currentKota->r != Nil) {
             printf("\n    |\n    V\n");
         }
         
-        currentCity = currentCity->r;
+        currentKota = currentKota->r;
     }
     printf("\n");
 }
